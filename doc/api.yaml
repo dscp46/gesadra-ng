@@ -178,6 +178,58 @@ paths:
           description: Opération réussie, aucune entrée à renvoyer
         '404':
           description: Activation non trouvée
+  /entry:
+    post:
+      tags:
+        - entry
+      summary: Ajouter une entrée de journal
+      description: Supprimer une activation par son identifiant
+      parameters:
+        - name: activation
+          in: query
+          description: Id de l'activation de rattachement
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody: 
+        description: Attributs de l'entrée
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Entry'
+      responses:
+        '200':
+          description: Opération réussie
+        '403':
+          description: Droits insuffisants
+        '404':
+          description: Activation non trouvée
+        '409':
+          description: Activation en lecture seule
+        '423':
+          description: Editeur non propriétaire de l'activation
+  /entry/{id}:
+    get:
+      tags:
+        - entry
+      summary: Consulter une entrée de journal
+      description: Consulter une entrée de journal par son identifiant
+      parameters:
+        - name: id
+          in: path
+          description: Id de l'activation à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Opération réussie
+        '401':
+          description: Authentification requise
+        '404':
+          description: Entrée non trouvée
   /pet:
     put:
       tags:
@@ -791,6 +843,50 @@ components:
           type: integer
           format: int64
           description: Timestamp de cloture de l'activation
+    Entry:
+      properties:
+        source:
+          type: string
+          example: Préfet
+          description: Qui est à l'origine de l'évenement
+        timestamp:
+          type: integer
+          format: int64
+          example: 198772
+          description: Timestamp auquel l'évenement s'est produit
+        received:
+          type: integer
+          format: int64
+          example: 198772
+          description: Timestamp auquel l'évenement a été reçu
+        precedence:
+          type: string
+          enum:
+          - flash
+          - immediate
+          - priority
+          - routine
+          description: priorité du message
+          default: routine
+        type:
+          type: string
+          description: Type de contenu dans cette entrée
+          enum:
+          - message
+          - sater_report
+          - aprs
+          default: message
+        lat:
+          type: number
+          format: double
+          description: Latitude de l'entrée en degrés décimaux sur WGS84
+        lon:
+          type: number
+          format: double
+          description: Longitude de l'entrée en degrés décimaux sur WGS84
+        payload:
+          type: string
+          description: Contenu utile de l'entrée
     Order:
       type: object
       properties:
@@ -962,6 +1058,12 @@ components:
       xml:
         name: '##default'
   requestBodies:
+    Entry:
+      description: Champs requis pour ajouter une entrée
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Entry'
     Pet:
       description: Pet object that needs to be added to the store
       content:
