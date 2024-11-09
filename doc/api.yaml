@@ -33,12 +33,78 @@ tags:
     description: Gestion des organisations
 paths:
   /activation:
+    get:
+      summary: Lister les activations
+      description: Lister les activations
+      tags:
+        - activation
+      parameters:
+        - name: active
+          in: query
+          description: Rechercher uniquement les activations en cours
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Opération réussie
+        '204':
+          description: Aucune activation à afficher
+    post:
+      summary: Créer une nouvelle activation
+      description: Créer une nouvelle activation
+      tags:
+        - activation
+      requestBody: 
+        description: Attributs de l'activation
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Activation'
+      responses:
+        '200':
+          description: Opération réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivationId'
+        '400':
+          description: Paramètres invalides
+        '403':
+          description: Droits insuffisants
+  /activation/{id}:
+    get:
+      tags:
+        - activation
+      summary: Lire les attributs d'une activation
+      description: Lire les attributs d'une activation par son identifiant
+      parameters:
+        - name: id
+          in: path
+          description: Id de l'activation à lire
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Opération réussie
+        '404':
+          description: Activation non trouvée
     put:
       tags:
         - activation
-      summary: Mettre à jour les attributs d'une activation
+      summary: Mettre à jour une activation
       description: Mettre à jour les attributs d'une activation par son identifiant
       operationId: updateActivation
+      parameters:
+        - name: id
+          in: path
+          description: Id de l'activation à mettre à jour
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody: 
         description: Attributs de l'activation
         content:
@@ -52,10 +118,30 @@ paths:
           description: Droits insuffisants
         '404':
           description: Activation non trouvée
-        '422':
+        '409':
           description: Objet en lecture seule
         '423':
           description: Editeur non propriétaire de l'activation
+    delete:
+      tags:
+        - activation
+      summary: Supprimer une activation
+      description: Supprimer une activation par son identifiant
+      parameters:
+        - name: id
+          in: path
+          description: Id de l'activation à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Opération réussie
+        '403':
+          description: Droits insuffisants
+        '404':
+          description: Activation non trouvée
   /pet:
     put:
       tags:
@@ -622,6 +708,16 @@ paths:
           description: User not found
 components:
   schemas:
+    ActivationId:
+      required:
+       - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+          description: Identifiant de l'activation créée
     Activation:
       required:
        - id
