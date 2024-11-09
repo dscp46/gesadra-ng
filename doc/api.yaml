@@ -142,6 +142,42 @@ paths:
           description: Droits insuffisants
         '404':
           description: Activation non trouvée
+  /activation/{id}/entries:
+    get:
+      tags:
+        - activation
+      summary: Lister les évenements d'une activation
+      description: Lister les évenements d'une activation par son identifiant
+      parameters:
+        - name: id
+          in: path
+          description: Id de l'activation à lire
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: getattrs
+          in: query
+          description: Récupérer tous les attributs de chaque entrée
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: since
+          in: query
+          description: Ne récupérer que les entrées éditées depuis le timestamp spécifié
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 0
+      responses:
+        '200':
+          description: Opération réussie
+        '204':
+          description: Opération réussie, aucune entrée à renvoyer
+        '404':
+          description: Activation non trouvée
   /pet:
     put:
       tags:
