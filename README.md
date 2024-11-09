@@ -46,7 +46,8 @@ L'outil se concentrera, dans un premier temps, sur la gestion d'une main courant
 
 ### Entrée de main courante
  * Timestamp
- * Auteur
+ * Source
+ * Transmetteur
  * Type (standard (quoi qui ou), report sater, trame APRS)
  * Saisi par le propriétaire ou collecté automatiquement (pour archivage données COP/CTP).
  * Contenu
