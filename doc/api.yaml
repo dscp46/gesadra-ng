@@ -45,11 +45,31 @@ paths:
           required: false
           schema:
             type: boolean
+        - name: sort
+          in: query
+          description: Choix de l'ordre d'affichage
+          schema:
+            type: string
+            default: desc
+            enum:
+            - asc
+            - desc
+        - name: sortby
+          in: query
+          description: Critère de tri
+          schema:
+            type: string
+            default: opened
+            enum:
+            - opened
+            - name
       responses:
         '200':
           description: Opération réussie
         '204':
           description: Aucune activation à afficher
+      security:
+        - cookieAuth: []
     post:
       summary: Créer une nouvelle activation
       description: Créer une nouvelle activation
@@ -72,6 +92,8 @@ paths:
           description: Paramètres invalides
         '403':
           description: Droits insuffisants
+      security:
+      - cookieAuth: []
   /activation/{id}:
     get:
       tags:
@@ -91,6 +113,8 @@ paths:
           description: Opération réussie
         '404':
           description: Activation non trouvée
+      security:
+      - cookieAuth: []
     put:
       tags:
         - activation
@@ -122,6 +146,8 @@ paths:
           description: Objet en lecture seule
         '423':
           description: Editeur non propriétaire de l'activation
+      security:
+      - cookieAuth: []
     delete:
       tags:
         - activation
@@ -142,6 +168,8 @@ paths:
           description: Droits insuffisants
         '404':
           description: Activation non trouvée
+      security:
+      - cookieAuth: []
   /activation/{id}/entries:
     get:
       tags:
@@ -178,6 +206,8 @@ paths:
           description: Opération réussie, aucune entrée à renvoyer
         '404':
           description: Activation non trouvée
+      security:
+      - cookieAuth: []
   /entry:
     post:
       tags:
@@ -209,6 +239,8 @@ paths:
           description: Activation en lecture seule
         '423':
           description: Editeur non propriétaire de l'activation
+      security:
+      - cookieAuth: []
   /entry/{id}:
     get:
       tags:
@@ -230,6 +262,8 @@ paths:
           description: Authentification requise
         '404':
           description: Entrée non trouvée
+      security:
+      - cookieAuth: []
   /pet:
     put:
       tags:
@@ -1081,7 +1115,17 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/User'
+              
   securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: SESSIONID
+    
+    digestAuth:
+      type: http
+      scheme: digest
+      
     petstore_auth:
       type: oauth2
       flows:
