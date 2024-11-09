@@ -40,6 +40,7 @@ L'outil se concentrera, dans un premier temps, sur la gestion d'une main courant
  * Ordinateur propriétaire (optionnel).
  * Type d'activation (SATER, moyens supplétifs de comm, etc.)
  * Demandeur
+ * Exercice ou Réel
  * Timestamp d'ouverture
  * Timestamp de cloture
 
